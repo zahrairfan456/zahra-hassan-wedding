@@ -1,0 +1,254 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #f7f0e8;
+    color: #5b4640;
+    font-family: "Cormorant Garamond", serif;
+}
+
+
+/* =========================
+   COVER
+========================= */
+
+.hero {
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    padding: 40px 20px;
+
+    position: relative;
+
+    background:
+        radial-gradient(circle at top left, #ead8d0 0%, transparent 35%),
+        radial-gradient(circle at bottom right, #e4d0c5 0%, transparent 35%),
+        #f7f0e8;
+}
+
+
+.small-title {
+    font-size: 13px;
+    letter-spacing: 4px;
+    margin-bottom: 25px;
+    color: #8b6d64;
+}
+
+
+h1 {
+    font-family: "Great Vibes", cursive;
+    font-size: clamp(65px, 10vw, 120px);
+    font-weight: 400;
+    color: #76564f;
+}
+
+
+h1 span {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 45px;
+    font-style: italic;
+    margin: 0 10px;
+}
+
+
+.invite-text {
+    font-size: 21px;
+    line-height: 1.6;
+    margin-top: 20px;
+}
+
+
+.divider {
+    font-size: 30px;
+    margin: 25px 0;
+    color: #a98276;
+}
+
+
+.date {
+    font-size: 20px;
+    letter-spacing: 5px;
+    margin-bottom: 30px;
+}
+
+
+/* BUTTON */
+
+button {
+    border: 1px solid #8b6d64;
+    background: transparent;
+    color: #6b514a;
+
+    padding: 13px 30px;
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: 17px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+
+button:hover {
+    background: #76564f;
+    color: white;
+}
+
+
+/* FLOWERS */
+
+.flower {
+    position: absolute;
+    font-size: 80px;
+    color: #b89588;
+    opacity: 0.35;
+}
+
+.flower-left {
+    left: 7%;
+    top: 10%;
+    transform: rotate(-25deg);
+}
+
+.flower-right {
+    right: 7%;
+    bottom: 10%;
+    transform: rotate(25deg);
+}
+
+
+/* =========================
+   DETAILS
+========================= */
+
+.details {
+    min-height: 90vh;
+
+    padding: 100px 20px;
+
+    text-align: center;
+
+    background: #efe2d9;
+}
+
+
+.details h2 {
+    font-family: "Great Vibes", cursive;
+    font-size: 65px;
+    font-weight: 400;
+    color: #76564f;
+
+    margin-bottom: 50px;
+}
+
+
+.detail-card {
+    max-width: 900px;
+    margin: auto;
+
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+
+    flex-wrap: wrap;
+}
+
+
+.detail {
+    width: 250px;
+
+    padding: 35px 20px;
+
+    background: rgba(255,255,255,0.35);
+
+    border: 1px solid rgba(118,86,79,0.2);
+}
+
+
+.icon {
+    font-size: 30px;
+    color: #a98276;
+}
+
+
+.detail h3 {
+    margin: 15px 0 8px;
+
+    font-size: 23px;
+}
+
+
+.detail p {
+    font-size: 18px;
+}
+
+
+.rsvp {
+    margin-top: 50px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+    padding: 35px;
+
+    text-align: center;
+
+    background: #76564f;
+
+    color: #f7f0e8;
+
+    font-size: 18px;
+}
+
+
+footer span {
+    display: block;
+    margin-top: 10px;
+    font-size: 25px;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+    h1 {
+        font-size: 65px;
+    }
+
+    h1 span {
+        font-size: 32px;
+    }
+
+    .invite-text {
+        font-size: 18px;
+    }
+
+    .details h2 {
+        font-size: 52px;
+    }
+
+    .flower {
+        font-size: 50px;
+    }
+
+    .detail {
+        width: 90%;
+    }
+}
