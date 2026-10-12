@@ -1,91 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Zahra & Hassan | Wedding Invitation</title>
-
-    <link rel="stylesheet" href="style.css">
-
-    <!-- Google Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zahra & Hassan — Nikah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Allura&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-    <!-- COVER -->
-    <section class="hero">
+  <!-- ============================================================
+       SCREEN 1 — the envelope. Fixed, full-viewport, NOT scrollable.
+       Tap anywhere on it to play. Sits on top until script.js
+       dismisses it, right as the video ends.
+       (UNCHANGED)
+  ============================================================= -->
+  <section id="envelopeScreen" aria-label="Tap to open the envelope">
 
-        <div class="flower flower-left">❀</div>
-        <div class="flower flower-right">❀</div>
+    <video
+      id="envelopeVideo"
+      playsinline
+      muted
+      preload="auto"
+    >
+      <source src="assets/video1.mp4" type="video/mp4">
+    </video>
 
-        <p class="small-title">TOGETHER WITH THEIR FAMILIES</p>
+  </section>
 
-        <h1>Zahra <span>&</span> Hassan</h1>
+  <main id="page2">
 
-        <p class="invite-text">
-            Joyfully invite you to celebrate<br>
-            their wedding
-        </p>
-
-        <div class="divider">❦</div>
-
-        <p class="date">20 • 12 • 2026</p>
-
-        <button onclick="showMessage()">
-            Open Invitation
-        </button>
-
+    <!-- (UNCHANGED) -->
+    <section id="hero2">
+      <video
+        id="secondVideo"
+        playsinline
+        muted
+        loop
+        preload="auto"
+      >
+        <source src="assets/video2.mp4" type="video/mp4">
+      </video>
+      <div class="scroll-cue" aria-hidden="true">
+        <span></span>
+        <small>Scroll</small>
+      </div>
     </section>
 
+    <!-- (UNCHANGED) -->
+    <section class="invite">
+      <img class="invite-img reveal" src="assets/second.png" alt="Nikah invitation — Zahra Irfan &amp; Hassan Malik, 06 December 2026">
+    </section>
 
-    <!-- WEDDING DETAILS -->
-    <section class="details">
+    <!-- ============================================================
+         TIMELINE
+         The wrapper (.timeline-wrap) holds the background layer AND the
+         timeline section. The background layer reaches ~1 inch UP over
+         the bottom of the second.png section above, fading in softly.
+         The timeline section itself (and everything script.js targets)
+         is exactly as before.
+         Background image is OPTIONAL: if assets/background-timeline.png
+         doesn't exist, the plain color behind it shows instead.
+    ============================================================= -->
+    <div class="timeline-wrap">
 
-        <p class="small-title">THE CELEBRATION</p>
+      <div class="timeline-bg-layer">
+        <img class="section-bg-optional" src="assets/background-timeline.png" alt="" onerror="this.style.display='none'">
+      </div>
 
-        <h2>Our Special Day</h2>
+      <section id="timeline" class="timeline">
+        <div class="timeline-sticky">
 
-        <div class="detail-card">
+          <div class="timeline-top">
+            <h2 class="script-heading">Order of Events</h2>
 
-            <div class="detail">
-                <span class="icon">♡</span>
-                <h3>Wedding Date</h3>
-                <p>Sunday, December 20, 2026</p>
+            <div class="timeline-track">
+              <div class="timeline-line"></div>
+              <img id="timelineFlower" class="timeline-flower" src="assets/flower.png" alt="">
+              <ul class="timeline-events">
+                <li class="timeline-event" data-index="0">
+                  <span class="timeline-time">1:00 PM</span>
+                  <span class="timeline-dot"></span>
+                  <span class="timeline-name">Guest<br>Arrival</span>
+                </li>
+                <li class="timeline-event" data-index="1">
+                  <span class="timeline-time">2:00 PM</span>
+                  <span class="timeline-dot"></span>
+                  <span class="timeline-name">Nikah<br>Ceremony</span>
+                </li>
+                <li class="timeline-event" data-index="2">
+                  <span class="timeline-time">3:30 PM</span>
+                  <span class="timeline-dot"></span>
+                  <span class="timeline-name">Lunch</span>
+                </li>
+              </ul>
             </div>
+          </div>
+        </div>
+      </section>
 
-            <div class="detail">
-                <span class="icon">✦</span>
-                <h3>Venue</h3>
-                <p>Islamabad, Pakistan</p>
-            </div>
+    </div>
 
-            <div class="detail">
-                <span class="icon">❀</span>
-                <h3>Time</h3>
-                <p>7:00 PM</p>
-            </div>
+    <!-- ============================================================
+         DRESS CODE — heading, italic colour line, small sticker.
+         Background image is OPTIONAL (same fallback behavior).
+    ============================================================= -->
+    <section class="dresscode">
+      <img class="section-bg-optional" src="assets/background-dresscode.png" alt="" onerror="this.style.display='none'">
+      <div class="dresscode-content">
+        <h2 class="script-heading">Dress Code</h2>
+        <p class="dresscode-text">Blush pink, off-white, skin, beige, or any nude colors.</p>
+        <img class="dresscode-sticker" src="assets/dresscode-sticker.png" alt="" onerror="this.style.display='none'">
+      </div>
+    </section>
+
+    <!-- ============================================================
+         LOCATION — "Open in Maps" sits BELOW the map.
+         Background image is OPTIONAL.
+    ============================================================= -->
+    <section class="location-section">
+      <img class="section-bg-optional" src="assets/background-location.png" alt="" onerror="this.style.display='none'">
+      <div class="location-card">
+        <h2 class="script-heading location-heading">Location</h2>
+
+        <div class="location-title-row">
+          <span class="location-pin" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
+          </span>
+          <p class="location-name">Mariano Restaurant</p>
 
         </div>
+          <img class="location-sticker" src="assets/location-sticker.png" alt="" onerror="this.style.display='none'">
 
-        <button class="rsvp" onclick="showRSVP()">
-            RSVP
-        </button>
+        <div class="location-map">
+          <iframe
+            src="https://www.google.com/maps?q=Mariano+Restaurant+%26+Spa,+Bahria+Golf+City,+New+Murree+Expressway,+Islamabad,+Pakistan&output=embed"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen>
+          </iframe>
+        </div>
 
+        
+      </div>
     </section>
 
+  </main>
 
-    <!-- FOOTER -->
-    <footer>
-        <p>With love, Zahra & Hassan</p>
-        <span>♡</span>
-    </footer>
+  <audio id="bgMusic" src="assets/music.mp3" loop preload="auto"></audio>
 
-
-    <script src="script.js"></script>
-
-</body>
+  <script src="script.js"></script></body>
 </html>
