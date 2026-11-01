@@ -27,12 +27,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let transitionStarted = false;
 
+  // --- Envelope picture -> video: crossfade instead of a hard swap ---
+  // The still picture sits on top of the video. Once the video is really
+  // showing frames, the picture fades out slowly (see .envelope-poster in
+  // the CSS), so there is no sudden blink when the video starts.
+  const envelopePoster = document.getElementById('envelopePoster');
+  let posterHidden = false;
+
+  function hidePoster() {
+    if (posterHidden) return;
+    posterHidden = true;
+    if (envelopePoster) envelopePoster.classList.add('is-hidden');
+  }
+
+  if (envelopeVideo.requestVideoFrameCallback) {
+    // fires when the video has actually put a picture on screen
+    envelopeVideo.requestVideoFrameCallback(hidePoster);
+  }
+  // fallback for phones that don't support the line above
+  envelopeVideo.addEventListener('timeupdate', () => {
+    if (envelopeVideo.currentTime > 0.05) hidePoster();
+  });
+
   // Lock scrolling while the envelope screen is showing
   body.classList.add('lock-scroll');
 
   // --- Tap anywhere on the envelope screen to play ---
-  envelopeScreen.addEventListener('click', () => {
-    envelopeVideo.play();
+  // Phones don't download a video until you tap, so on a slow connection
+  // the first tap can take a moment. This guard ignores extra taps while
+  // it is already starting, but lets you tap again if the phone refused.
+  let envelopeStarted = false;
+
+  function startEnvelope() {
+    if (envelopeStarted) return;
+    envelopeStarted = true;
+
+    const playPromise = envelopeVideo.play();
+    if (playPromise && playPromise.catch) {
+      // if the phone refused to start the video, allow another tap to retry
+      playPromise.catch(() => { envelopeStarted = false; });
+    }
+
+    // Warm up the second video while the envelope is playing, so its first
+    // picture is already on screen when the fade reveals it (no dark blink).
+    primeSecondVideo();
 
     // Start the background music on the same tap. Phones only allow
     // sound after a tap, so this has to happen inside the click.
@@ -41,7 +79,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (bgMusic) {
       bgMusic.play().catch(() => { /* file missing or blocked: stay silent */ });
     }
-  }, { once: true });
+  }
+
+  envelopeScreen.addEventListener('click', startEnvelope);
 
   // --- Watch playback progress, start the fade just before it ends ---
   envelopeVideo.addEventListener('timeupdate', () => {
@@ -63,6 +103,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Loads video2 and holds it on its first frame, hidden behind the envelope.
+  let secondPrimed = false;
+  function primeSecondVideo() {
+    if (secondPrimed) return;
+    secondPrimed = true;
+    const p = secondVideo.play();
+    if (p && p.then) {
+      p.then(() => {
+        // if page 2 is already being revealed, leave it playing
+        if (!transitionStarted) {
+          secondVideo.pause();
+          secondVideo.currentTime = 0;
+        }
+      }).catch(() => { /* if the phone refuses, it just starts at the fade instead */ });
+    }
+  }
+
   function goToPageTwo() {
     envelopeScreen.classList.add('dismissed');
 
@@ -75,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { once: true });
 
     // start video2 right away so it's already playing as the fade reveals it
-    secondVideo.currentTime = 0;
+    if (secondVideo.currentTime > 0.05) secondVideo.currentTime = 0;
     const playPromise = secondVideo.play();
     if (playPromise) playPromise.catch(() => { /* muted + playsinline should allow autoplay on mobile */ });
   }
@@ -94,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+    }, { threshold: 0, rootMargin: '0px 0px 35% 0px' });
 
     revealEls.forEach((el) => observer.observe(el));
   } else {
