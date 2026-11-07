@@ -27,26 +27,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let transitionStarted = false;
 
-  // --- Envelope picture -> video: crossfade instead of a hard swap ---
-  // The still picture sits on top of the video. Once the video is really
-  // showing frames, the picture fades out slowly (see .envelope-poster in
-  // the CSS), so there is no sudden blink when the video starts.
+  // --- Envelope picture -> video: fade instead of a hard swap ---
+  // The still picture sits on top of the video. On phones the video can show
+  // a black frame for a moment right after the tap, so the picture stays put
+  // until the video has really played for a fraction of a second, and only
+  // then fades out (see .envelope-poster in the CSS).
   const envelopePoster = document.getElementById('envelopePoster');
+  const POSTER_FADE_START = 0.15;   // seconds of video that must have played first
   let posterHidden = false;
 
   function hidePoster() {
     if (posterHidden) return;
     posterHidden = true;
     if (envelopePoster) envelopePoster.classList.add('is-hidden');
+    // video 1 is now really playing, so it's safe to warm up video 2
+    // without slowing video 1 down
   }
 
   if (envelopeVideo.requestVideoFrameCallback) {
-    // fires when the video has actually put a picture on screen
-    envelopeVideo.requestVideoFrameCallback(hidePoster);
+    // called for every picture the video puts on screen
+    const watchFrames = (now, metadata) => {
+      if (metadata && metadata.mediaTime >= POSTER_FADE_START) {
+        hidePoster();
+      } else if (!posterHidden) {
+        envelopeVideo.requestVideoFrameCallback(watchFrames);
+      }
+    };
+    envelopeVideo.requestVideoFrameCallback(watchFrames);
   }
-  // fallback for phones that don't support the line above
+  // fallback for phones that don't support the lines above
   envelopeVideo.addEventListener('timeupdate', () => {
-    if (envelopeVideo.currentTime > 0.05) hidePoster();
+    if (envelopeVideo.currentTime >= POSTER_FADE_START + 0.1) hidePoster();
   });
 
   // Lock scrolling while the envelope screen is showing
@@ -82,6 +93,39 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   envelopeScreen.addEventListener('click', startEnvelope);
+
+  // --- Music: stop when the visitor leaves the page, resume when they return ---
+  // "Leaving" = switching to another tab or app, locking the screen, or
+  // closing the page. Without this, phones keep playing the music.
+  let musicWasPlaying = false;
+
+  function pauseMusicIfAway() {
+    if (bgMusic && !bgMusic.paused) {
+      musicWasPlaying = true;
+      bgMusic.pause();
+    }
+  }
+
+  function resumeMusicIfReturned() {
+    if (bgMusic && musicWasPlaying) {
+      musicWasPlaying = false;
+      bgMusic.play().catch(() => { /* if the phone refuses, it stays silent */ });
+    }
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      pauseMusicIfAway();
+    } else {
+      resumeMusicIfReturned();
+    }
+  });
+
+  // some phones fire these instead of (or as well as) visibilitychange
+  window.addEventListener('pagehide', pauseMusicIfAway);
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted) resumeMusicIfReturned();
+  });
 
   // --- Watch playback progress, start the fade just before it ends ---
   envelopeVideo.addEventListener('timeupdate', () => {
