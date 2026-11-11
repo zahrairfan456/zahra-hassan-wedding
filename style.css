@@ -186,7 +186,7 @@ body.lock-scroll {
 .timeline-wrap {
   position: relative;
   z-index: 1;                    /* paints above the second.png section */
-  --timeline-overlap: 96px;
+  --timeline-overlap: 80px;
 }
 
 .timeline-bg-layer {
